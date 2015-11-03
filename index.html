@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/utilities.css">
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+	<link href="css/main.css" rel="stylesheet" type="text/css">
+	<link href="" rel="stylesheet" type="text/css">
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/jquery.js"></script>
+	
+  <script type="text/javascript">
+  $(document).ready(function(){ 
+  alert("Bienvenido al chat") ;
+  });
+  </script>
+  </head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+               
+                <div class="panel-body">
+                    <ul class="chat">
+                      <p class="bg-info bt-first">Hola!! Escribe en el campo de abajo y presiona OK.</p>
+                      <p class="bg-success bt-bg">Hola mundo</p>
+                      <p class="bg-info bt-bg">Esto es un info</p>
+                      <p class="bg-danger bt-bg">Danger</p>
+                      <p class="bg-warning bt-bg">Warning</p>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Escribe tu mensaje aquí..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                OK</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+$(document).ready(function(){
+
+  $("#btn-chat").click(function(){
+       
+       var d = new Date();
+       var m = d.getMonth() + 1;
+       var mes = (m < 10) ? '0' + m : m;
+       var dato = $("#btn-input").val();
+       var fec =d.getFullYear()+'-'+mes+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+       var nom = 'cristian';
+       
+    if($("#btn-input").val()!=""){
+
+        $.ajax({
+            url: "receive.php",
+            type: "POST",
+            data: { 
+                mensaje: dato,
+                fecha: fec,
+                nombre: nom
+            },
+            dataType: "html",
+            success : function(data){
+                 $(".chat").append("<li class='right clearfix'><span class='chat-img pull-right'><img src='http://placehold.it/50/FA6F57/fff&text=ME' alt='User Avatar' class='img-circle'/></span><small class=' text-muted'><span class='glyphicon glyphicon-time'></span>"+fec+"</small><strong class='pull-right primary-font'>"+nom+" </strong><br><p>"+dato+"</p></li>");
+            }
+        });
+
+        $("#btn-input").val("");
+    }
+  });
+
+  $.ajax({
+            url: "consulta.php",
+            type: "POST",
+            
+            dataType: "json",
+            success : function(data){
+
+            $.each(data,function(index, value){
+                        console.log(value); 
+                        var nom_consulta=value.nom;
+                        console.log(value.fec);
+                        var fec_consulta=value.fec
+                        console.log(value.tex);
+                        var tex_consulta=value.tex;
+
+                     $(".chat").append("<li class='right clearfix'><span class='chat-img pull-right'><img src='http://placehold.it/50/FA6F57/fff&text=ME' alt='User Avatar' class='img-circle'/></span><small class=' text-muted'><span class='glyphicon glyphicon-time'></span>"+fec_consulta+"</small><strong class='pull-right primary-font'>"+nom_consulta+" </strong><br><p>"+tex_consulta+"</p></li>");
+                     
+
+            });
+            }
+        });
+
+
+  });
+
+$(document).keypress(function(event) {
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13') {
+        $("#btn-chat").click();
+    }
+});
+
+
+</script>
+
+
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript"></script>
+
+</script>
+</body>
+</html>
